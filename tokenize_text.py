@@ -6,10 +6,12 @@ def tokenize_text(tokenizer_output_path: str, text_file_path: str, tokenized_tex
     tokenizer = Tokenizer.from_file(tokenizer_output_path)
     tokenizer.pre_tokenizer = Whitespace()
 
+    tokens = []
     with open(text_file_path, "r", encoding="utf-8") as f:
-        text = f.read()
+        for line in f:
+            line_tokens = tokenizer.encode(line).ids
+            tokens.extend(line_tokens)
 
-    tokens = tokenizer.encode(text).ids
     token_ids = np.array(tokens, dtype=np.int32)
     np.savez_compressed(tokenized_text_file_path, token_ids=token_ids)
 
