@@ -1,0 +1,15 @@
+
+[project]
+name = ""
+version = ""
+description = ""
+authors = [
+    {name = "Matt Koski", email = "maccam912@gmail.com"},
+]
+dependencies = ["requests", "beautifulsoup4", "lxml", "tqdm", "tokenizers", "numpy"]
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
