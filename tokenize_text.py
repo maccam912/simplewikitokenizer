@@ -1,6 +1,17 @@
 import numpy as np
 from tokenizers import Tokenizer
 from tokenizers.pre_tokenizers import Whitespace
+from tqdm import tqdm
+
+def blocks(files, size=65536):
+    while True:
+        b = files.read(size)
+        if not b: break
+        yield b
+
+def num_newlines(path: str):
+    with open(path, "r", errors="ignore") as f:
+        return sum(bl.count("\n") for bl in blocks(f))
 
 def tokenize_text(tokenizer_output_path: str, text_file_path: str, tokenized_text_file_path: str):
     tokenizer = Tokenizer.from_file(tokenizer_output_path)
@@ -8,7 +19,7 @@ def tokenize_text(tokenizer_output_path: str, text_file_path: str, tokenized_tex
 
     tokens = []
     with open(text_file_path, "r", encoding="utf-8") as f:
-        for line in f:
+        for line in tqdm(f, total=num_newlines(text_file_path)):
             line_tokens = tokenizer.encode(line).ids
             tokens.extend(line_tokens)
 

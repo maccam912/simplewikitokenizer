@@ -10,7 +10,7 @@ DUMP_URL = "https://dumps.wikimedia.org/simplewiki/latest/simplewiki-latest-page
 BZ2_FILE_PATH = "simplewiki-latest-pages-articles.xml.bz2"
 XML_FILE_PATH = "simplewiki-latest-pages-articles.xml"
 TEXT_FILE_PATH = "simplewiki_articles.txt"
-TOKENIZER_OUTPUT_PATH = "trained_tokenizer"
+TOKENIZER_OUTPUT_PATH = "tokenizer.json"
 TOKENIZED_TEXT_FILE_PATH = "tokenized_text.npz"
 VOCAB_SIZE = 4096
 
