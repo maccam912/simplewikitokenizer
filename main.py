@@ -48,11 +48,11 @@ def main():
         train_tokenizer(TEXT_FILE_PATH, TOKENIZER_OUTPUT_PATH, VOCAB_SIZE)
         log_step_end("training tokenizer", start_time)
 
-    start_time = time.time()
-    if not os.path.exists(TOKENIZED_TEXT_FILE_PATH):
-        log_step_start("tokenizing text")
-        tokenize_text(TOKENIZER_OUTPUT_PATH, TEXT_FILE_PATH, TOKENIZED_TEXT_FILE_PATH)
-        log_step_end("tokenizing text", start_time)
+#     start_time = time.time()
+#     if not os.path.exists(TOKENIZED_TEXT_FILE_PATH):
+#         log_step_start("tokenizing text")
+#         tokenize_text(TOKENIZER_OUTPUT_PATH, TEXT_FILE_PATH, TOKENIZED_TEXT_FILE_PATH)
+#         log_step_end("tokenizing text", start_time)
 
 if __name__ == "__main__":
     main()
