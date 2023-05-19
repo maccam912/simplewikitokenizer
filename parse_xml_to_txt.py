@@ -22,13 +22,14 @@ class WikiContentHandler(xml.sax.ContentHandler):
             self.is_article = False
         self.current_tag = ""
 
-    def characters(self, content):
+    def characters(self, content: str):
         if self.current_tag == "title":
             self.current_title += content
-            if not re.match(r"(User|Talk|Wikipedia|File|MediaWiki|Template|Help|Category|Portal):", self.current_title):
+            if not re.match(r"(User|Talk|Wikipedia|File|MediaWiki|Template|Help|Category|Portal|File):", self.current_title):
                 self.is_article = True
-        elif self.current_tag == "text" and self.is_article:
-            self.current_text += content
+        elif self.current_tag == "text" and self.is_article and len(content) > 100:
+            self.current_text += content.encode("ascii", errors="replace").decode("ascii", errors="replace").replace('[', '').replace(']', '')
+            self.current_text += ' '
 
 def parse_xml(xml_file_path, text_file_path):
     parser = xml.sax.make_parser()
