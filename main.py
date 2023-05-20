@@ -12,7 +12,7 @@ XML_FILE_PATH = "simplewiki-latest-pages-articles.xml"
 TEXT_FILE_PATH = "simplewiki_articles.txt"
 TOKENIZER_OUTPUT_PATH = "tokenizer.json"
 TOKENIZED_TEXT_FILE_PATH = "tokenized_text.npz"
-VOCAB_SIZE = 4096
+VOCAB_SIZE = 8192
 
 def log_step_start(step_name):
     print(f"Starting {step_name}...")
