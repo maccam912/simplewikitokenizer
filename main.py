@@ -1,18 +1,11 @@
 import os
 import time
-from download_dump import download_dump
-from extract_xml import extract_xml
-from parse_xml_to_txt import parse_xml
-from train_tokenizer import train_tokenizer
-from tokenize_text import tokenize_text
+from tokenizers import Tokenizer, models, pre_tokenizers, normalizers, trainers
+from datasets import load_dataset
 
-DUMP_URL = "https://dumps.wikimedia.org/simplewiki/latest/simplewiki-latest-pages-articles.xml.bz2"
-BZ2_FILE_PATH = "simplewiki-latest-pages-articles.xml.bz2"
-XML_FILE_PATH = "simplewiki-latest-pages-articles.xml"
-TEXT_FILE_PATH = "simplewiki_articles.txt"
+DATASET = "lsb/simplewiki2023"
 TOKENIZER_OUTPUT_PATH = "tokenizer.json"
-TOKENIZED_TEXT_FILE_PATH = "tokenized_text.npz"
-VOCAB_SIZE = 8192
+VOCAB_SIZE = 4096
 
 def log_step_start(step_name):
     print(f"Starting {step_name}...")
@@ -25,34 +18,19 @@ def log_step_end(step_name, start_time):
 def main():
     start_time = time.time()
 
-    if not os.path.exists(BZ2_FILE_PATH):
-        log_step_start("downloading dump")
-        download_dump(DUMP_URL, BZ2_FILE_PATH)
-        log_step_end("downloading dump", start_time)
-
-    start_time = time.time()
-    if not os.path.exists(XML_FILE_PATH):
-        log_step_start("extracting XML")
-        extract_xml(BZ2_FILE_PATH, XML_FILE_PATH)
-        log_step_end("extracting XML", start_time)
-
-    start_time = time.time()
-    if not os.path.exists(TEXT_FILE_PATH):
-        log_step_start("parsing XML to text")
-        parse_xml(XML_FILE_PATH, TEXT_FILE_PATH)
-        log_step_end("parsing XML to text", start_time)
-
-    start_time = time.time()
     if not os.path.exists(TOKENIZER_OUTPUT_PATH):
         log_step_start("training tokenizer")
-        train_tokenizer(TEXT_FILE_PATH, TOKENIZER_OUTPUT_PATH, VOCAB_SIZE)
-        log_step_end("training tokenizer", start_time)
+        tokenizer = Tokenizer(models.Unigram())
+        tokenizer.pre_tokenizer = pre_tokenizers.BertPreTokenizer()
+        tokenizer.normalizer = normalizers.BertNormalizer()
 
-#     start_time = time.time()
-#     if not os.path.exists(TOKENIZED_TEXT_FILE_PATH):
-#         log_step_start("tokenizing text")
-#         tokenize_text(TOKENIZER_OUTPUT_PATH, TEXT_FILE_PATH, TOKENIZED_TEXT_FILE_PATH)
-#         log_step_end("tokenizing text", start_time)
+        trainer = trainers.UnigramTrainer(vocab_size=VOCAB_SIZE, special_tokens=["[UNK]"])
+
+        dataset = load_dataset(DATASET)
+        tokenizer.train_from_iterator(dataset["train"]["text"], trainer=trainer, length=len(dataset["train"]))
+
+        tokenizer.save(TOKENIZER_OUTPUT_PATH)
+        log_step_end("training tokenizer", start_time)
 
 if __name__ == "__main__":
     main()

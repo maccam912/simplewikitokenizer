@@ -6,7 +6,10 @@ description = ""
 authors = [
     {name = "Matt Koski", email = "maccam912@gmail.com"},
 ]
-dependencies = ["requests", "beautifulsoup4", "lxml", "tqdm", "tokenizers", "numpy"]
+dependencies = [
+    "datasets>=2.12.0",
+    "tokenizers>=0.13.3",
+]
 requires-python = ">=3.10"
 license = {text = "MIT"}
 
