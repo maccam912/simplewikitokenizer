@@ -35,6 +35,7 @@ def main() -> None:
         log_step_start("training tokenizer")
 
         tokenizer = Tokenizer(models.Unigram())
+        # tokenizer = Tokenizer(models.BPE())
 
         tokenizer.normalizer = normalizers.Sequence(
             [
@@ -49,8 +50,21 @@ def main() -> None:
 
         tokenizer.pre_tokenizer = pre_tokenizers.Metaspace()
 
-        cls_token_id = tokenizer.token_to_id("<cls>")
-        sep_token_id = tokenizer.token_to_id("<sep>")
+        special_tokens = ["<cls>", "<sep>", "<unk>", "<pad>", "<mask>", "<s>", "</s>"]
+        trainer = trainers.UnigramTrainer(
+            # trainer = trainers.BpeTrainer(
+            vocab_size=VOCAB_SIZE,
+            special_tokens=special_tokens,
+            unk_token="<unk>",
+        )
+
+        dataset = load_dataset(DATASET)
+        tokenizer.train_from_iterator(
+            dataset["train"]["text"], trainer=trainer, length=len(dataset["train"])
+        )
+
+        cls_token_id: int = tokenizer.token_to_id("<cls>")
+        sep_token_id: int = tokenizer.token_to_id("<sep>")
 
         tokenizer.post_processor = processors.TemplateProcessing(
             single="$A:0 <sep>:0 <cls>:2",
@@ -59,16 +73,6 @@ def main() -> None:
         )
 
         tokenizer.decoder = decoders.Metaspace()
-
-        special_tokens = ["<cls>", "<sep>", "<unk>", "<pad>", "<mask>", "<s>", "</s>"]
-        trainer = trainers.UnigramTrainer(
-            vocab_size=4096, special_tokens=special_tokens, unk_token="<unk>"
-        )
-
-        dataset = load_dataset(DATASET)
-        tokenizer.train_from_iterator(
-            dataset["train"]["text"], trainer=trainer, length=len(dataset["train"])
-        )
 
         tokenizer.save(TOKENIZER_OUTPUT_PATH)
         log_step_end("training tokenizer", start_time)
