@@ -49,6 +49,7 @@ dependencies = [
     "pathspec>=0.9.0",
     "platformdirs>=2",
     "tomli>=1.1.0; python_version < \"3.11\"",
+    "typing-extensions>=3.10.0.0; python_version < \"3.10\"",
 ]
 
 [[package]]
@@ -239,6 +240,7 @@ version = "2.0.1"
 requires_python = ">=3.8"
 summary = "Powerful data structures for data analysis, time series, and statistics"
 dependencies = [
+    "numpy>=1.20.3; python_version < \"3.10\"",
     "numpy>=1.21.0; python_version >= \"3.10\"",
     "numpy>=1.23.2; python_version >= \"3.11\"",
     "python-dateutil>=2.8.2",
@@ -409,7 +411,7 @@ dependencies = [
 lock_version = "4.2"
 cross_platform = true
 groups = ["default", "dev"]
-content_hash = "sha256:49210d10aac223268691578a1552222071ca04400953d8a2194537400a7f9de9"
+content_hash = "sha256:1fcb93d57c3d5f43082bccf85cc97f4e889f0299c7272a19994bceb5497a7e3c"
 
 [metadata.files]
 "aiohttp 3.8.4" = [
